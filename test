@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Print Environment Variables') {
+            steps {
+                script {
+                    sh '''
+                    echo "AWS Environment Variables:"
+                    printenv | grep AWS || echo "No AWS environment variables found"
+                    '''
+                }
+            }
+        }
+        stage('Print AWS CLI Configuration') {
+            steps {
+                script {
+                    sh '''
+                    echo "AWS CLI Credentials File:"
+                    cat ~/.aws/credentials || echo "No credentials file found"
+                    echo "AWS CLI Config File:"
+                    cat ~/.aws/config || echo "No config file found"
+                    '''
+                }
+            }
+        }
+        stage('Print AWS Caller Identity') {
+            steps {
+                script {
+                    sh 'aws sts get-caller-identity'
+                }
+            }
+        }
+    }
+}
